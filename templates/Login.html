@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Screen</title>
+</head>
+<body>
+<form action="/Login" method="post">
+
+<!-- the below line of code displays the error messages which are sent using flash -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+<!-- the below line of code allows the user to enter there name and password, so they can log in -->
+<h1>Login</h1>
+<input type="text" value="" placeholder="username" name="username"> <br />
+<label for="login-name"></label>
+<input type="password" value="" placeholder="password" name="password"> <br />
+<input type="submit" value="Log in">
+
+</form>
+</body>
+</html>

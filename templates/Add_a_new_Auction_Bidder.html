@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset = windows-1252">
+</head>
+
+<body data-gr-c-s-loaded = "true" style="...">
+    <form action="{{ url_for('addrec') }}" method="POST">
+        <!-- the lines of code display to the user text boxes to add the bidder attributes
+         and submits -->
+        <h3>Bidder information</h3>
+        Name<br>
+        <input type="text" name="name"><br>
+
+        Phone Number<br>
+        <input type="text" name="Phone Number"><br>
+
+        Prequalified Upper Limit<br>
+        <input type="text" name="Prequalified Upper Limit"><br>
+
+        App Role Level<br>
+        <input type="text" name="App Role Level"><br>
+
+        Login Password<br>
+        <input type="password" name="Login Password"><br>
+        <input type="submit" value="submit"><br>
+    </form>
+</body>
+</html>
