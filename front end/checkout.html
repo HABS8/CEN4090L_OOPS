@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAVORITES</title>
+
+</head>
+<body>
+    <header>
+        <h1>OOPS!</h1>
+        <nav>
+            <ul>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="listing.html">List Items</a></li>
+                <li><a href="buying.html">Buy Items</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="cart.html">Shopping Cart</a></li>
+                <li><a href="home.html">HomePage</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li class="active"><a href="checkout.html">Checkout</a></li> <!-- Highlight active page -->
+            </ul>
+        </nav>
+    </header>
+    <main>
+
+        <section id="shipping-details">
+            <h2>Shipping Details</h2>
+            <!-- input shipping info -->
+            <form action="process_checkout.php" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" rows="4" required></textarea>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <button type="submit">Continue to Payment</button>
+            </form>
+        </section>
+
+        <section id="payment-details">
+            <h2>Payment Details</h2>
+            <!-- input payment info -->
+            <form action="process_payment.php" method="POST">
+                <label for="card-number">Credit Card Number:</label>
+                <input type="text" id="card-number" name="card-number" required>
+
+                <label for="expiry-date">Expiration Date:</label>
+                <input type="text" id="expiry-date" name="expiry-date" placeholder="MM/YYYY" required>
+
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" name="cvv" required>
+
+                <label for="card-holder-name">Cardholder Name:</label>
+                <input type="text" id="card-holder-name" name="card-holder-name" required>
+
+
+                <button type="submit">Complete Purchase</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

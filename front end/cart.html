@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CART</title>
+</head>
+<body>
+    <header>
+        <h1>OOPS!</h1>
+        <nav>
+            <ul>
+                <li><a href="profile.html">Home</a></li>
+                <li><a href="listing.html">List Item</a></li>
+                <li><a href="buying.html">Buy Item</a></li>
+                <li><a href="favorites.html">Favorites</a></li>
+                <li><a href="cart.html">Shopping Cart</a></li>
+                <li><a href="checkout.html">Checkout</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li class="active"><a href="cart.html">Profile</a></li> <!-- Highlight active page -->
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="order-summary">
+            <h2>Order Summary</h2>
+            <!-- selected items and total cost -->
+            <div class="item">
+                <img src="item1.jpg" alt="Item 1">
+                <h3>Item 1 Name</h3>
+                <p>Description </p>
+                <p>Price: $</p>
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                
+            </div>
+
+            <div class="item">
+                <img src="item2.jpg" alt="Item 2">
+                <h3>Item 2 Name</h3>
+                <p>Description </p>
+                <p>Price: $</p>
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                
+            </div>
+            
+
+            <div id="total-cost">
+                <h3>Total:</h3>
+                <p>$</p> 
+            </div>
+        </section>
+        <a href="checkout.html" class="checkout-button">Checkout</a>
+    </main>
+
+</body>
+</html>
