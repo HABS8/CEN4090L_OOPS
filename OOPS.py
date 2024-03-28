@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, session, flash, jsonify
 import sqlite3
-import Encryption
+import encryption
 import pandas as pd
 import socket
 import sys
