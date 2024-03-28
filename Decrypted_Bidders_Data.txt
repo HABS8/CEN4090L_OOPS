@@ -1,7 +1,0 @@
-'BidderId', 'BidderName',      'PhoneNumber', 'PrequalifiedUpperLimit', 'AppRoleLevel', 'LoginPassword'
-1,          'James Bond',      '111-222-0007',      300000,                    3,          'test123'
-2,          'Tina Whitefield', '333-444-5555',     2500000,                    2,          'test456'
-3,          'Tim Jones',       '777-888-9999',      125000,                    1,          'test789'
-4,          'Jenny Smith',     '3333-222-1111',      10000,                    2,          'test321'
-5,          'Mike Hatfield',   '555-444-3333',        2500,                    1,          'test654'
-6,          'Steve Makers',    '999-888-7777',         750,                    3,          'test987'

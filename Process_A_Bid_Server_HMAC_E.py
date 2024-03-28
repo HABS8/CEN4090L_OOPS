@@ -1,5 +1,5 @@
 import socketserver
-import Encryption
+import encryption
 import sqlite3
 import hmac, hashlib
 

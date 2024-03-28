@@ -1,14 +1,3 @@
-"""
-
-Name: Hasan Angel Bazzi Sabra
-Date: 10/23/2022
-Assignment: Module 8: Send Authenticated Message
-Due Date: 10/23/2022
-About this project: this projects goal is to introduce the concept of authentication
-Assumptions: it is assumed that the password and name of the bidder will always produce a
-unique combination
-
-"""
 import os
 from flask import Flask, render_template, request, session, flash, jsonify
 import sqlite3
