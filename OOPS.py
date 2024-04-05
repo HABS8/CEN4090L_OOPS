@@ -11,12 +11,9 @@ import hmac, hashlib
 app = Flask(__name__)
 
 ######### functions for the website goo here ########
-
+@app.route('/')
 def home():
-    if not session.get('logged_in1') and not session.get('logged_in2') and not session.get('logged_in3'):
-        return render_template('Login.html')
-    else:
-        return render_template('Home.html', name=session['name'])
+    return render_template('Website.html')
 
 ######################################################
 
