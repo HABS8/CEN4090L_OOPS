@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Online Personal Stylist</title>
+    <title>HOME</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
+
+    <!-- Navigation Bar -->
     <nav>
         <div class="container">
-            <h1>Welcome to OOPS!</h1>
-
+            <h1>OOPS!</h1>
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
@@ -25,43 +25,35 @@
         </div>
     </nav>
 
-   
+    <!-- Main Content for the Home Page -->
     <main>
-        <!-- Home Page -->
         <section id="home">
-            <include src="home.html" />
+            <div class="welcome-message">
+                <h2>Welcome to OOPS</h2>
+                <p class="explore-text">Explore and shop for trendy apparel.</p>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <button type="submit">Search</button>
+            </div>
         </section>
-
-        <!-- Listing Page -->
-        <section id="listing">
-            <include src="listing.html" />
-        </section>
-
-        <!-- Cart Page -->
-        <section id="cart">
-            <include src="cart.html" />
-        </section>
-
-        <!-- Profile Page -->
-        <section id="profile">
-            <include src="profile.html" />
-        </section>
-
-        <!-- Chat Page -->
-        <section id="chat">
-            <include src="chat.html" />
-        </section>
-
-        <!-- Favorites Page -->
-        <section id="favorites">
-            <include src="favorites.html" />
-        </section>
+        
+        <section id="recommended-items">
+            <h2>Recommended Items</h2>
+            
+            <div class="item">
+                <img src="item1.jpg" alt="Item 1">
+                <h3>Item 1</h3>
+                <p>Description</p>
+                <button>Add to Cart</button>
+            </div>
+        
     </main>
-
     <footer>
         <div class="container">
             <p>&copy; 2024 OOPS. All rights reserved.</p>
         </div>
     </footer>
+    
 </body>
 </html>

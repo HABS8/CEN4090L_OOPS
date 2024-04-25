@@ -4,28 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LISTINGS</title>
-
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>OOPS!</h1>
-        <nav>
+    <nav>
+        <div class="container">
+            <h1>OOPS!</h1>
             <ul>
-                <li><a href="home.html">HomePage</a></li>
-                <li><a href="profile.html">Profile</a></li>
-                <li><a href="buying.html">Buy Items</a></li>
-                <li><a href="favorites.html">Favorites</a></li>
-                <li><a href="cart.html">Shopping Cart</a></li>
-                <li><a href="checkout.html">Checkout</a></li>
-                <li><a href="chat.html">Chat</a></li>
-                <li class="active"><a href="listing.html">List Items</a></li> <!-- Highlight active page -->
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/listing">List Item</a></li>
+                <li><a href="/buying">Buy Item</a></li>
+                <li><a href="/home">HomePage</a></li>
+                <li><a href="/cart">Shopping Cart</a></li>
+                <li><a href="/checkout">Checkout</a></li>
+                <li><a href="/chat">Chat</a></li>
+                <li><a href="/favorites">Favorites</a></li>
             </ul>
-        </nav>
-    </header>
+            <h2>LIST ITEMS</h2>
+        </div>
+    </nav>
 
     <main>
         <section id="listing-form">
-            <h2>List Item</h2>
+            
             <!-- Form for users to list items for sale -->
             <form action="process_listing.php" method="POST">
                 <label for="item-name">Item Name:</label>
@@ -44,5 +45,10 @@
             </form>
         </section>
     </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 OOPS. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
