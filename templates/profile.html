@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROFILE</title>
+    <title>Profile</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <nav>
         <div class="container">
-            <h1>OOPS!</h1>
-            
+            <h1>Profile</h1>
             <ul>
                 <li><a href="profile.html">Profile</a></li>
                 <li><a href="listing.html">List Item</a></li>
@@ -20,38 +19,70 @@
                 <li><a href="checkout.html">Checkout</a></li>
                 <li><a href="chat.html">Chat</a></li>
                 <li><a href="favorites.html">Favorites</a></li>
-                
             </ul>
-            <h2>PROFILE</h2>
         </div>
     </nav>
+
     <main>
+        <section id="user-info">
+            <h2>User Information</h2>
+            <p>Name: [User's Name]</p>
+            <p>Email: [User's Email]</p>
+            <!-- Add other user information as needed -->
+        </section>
+
         <section id="listed-items">
             <h2>Listed Items</h2>
-            <!-- User's listed items -->
-            <div class="item">
-                <img src="item1.jpg" alt="Item 1">
-                <h3>Item 1</h3>
-                <p>Description</p>
-                <button>Edit</button>
-                <button>Delete</button>
+            <div id="listed-items-container">
+                <!-- user's listed items -->
             </div>
-            
         </section>
 
         <section id="purchase-history">
             <h2>Purchase History</h2>
-            <!-- User's past purchases and order history -->
-            <ul>
-                <li>Item Name - Date Purchased</li>
-                
+            <ul id="purchase-history-list">
+                <!-- user's purchase history -->
             </ul>
         </section>
     </main>
+
     <footer>
         <div class="container">
             <p>&copy; 2024 OOPS. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+    // Fetch user's profile information
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/user-profile') 
+            .then(response => response.json())
+            .then(data => {
+                // Populate user's listed items
+                const listedItemsContainer = document.querySelector('#listed-items-container');
+                data.listedItems.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'item';
+                    itemElement.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}">
+                        <h3>${item.name}</h3>
+                        <p>${item.description}</p>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    `;
+                    listedItemsContainer.appendChild(itemElement);
+                });
+
+                // Populate user's purchase history
+                const purchaseHistoryList = document.querySelector('#purchase-history-list');
+                data.purchaseHistory.forEach(purchase => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `${purchase.itemName} - ${purchase.date}`;
+                    purchaseHistoryList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching user profile:', error));
+    });
+    </script>
 </body>
 </html>
