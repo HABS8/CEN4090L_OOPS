@@ -12,13 +12,13 @@
     <section class="signup">
         <div class="container">
             <h2>Sign Up</h2>
-            <form action="/profile" method="post"> <!-- Redirect to create_profile.html after signup -->
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit">Sign Up</button>
+            <form action="/signup" method="post" class="form"> 
+                <input class="username w-input" maxlength="256" name="username" placeholder="Username" type="text" id="username" required>
+                    <input class="email w-input" maxlength="256" name="email" placeholder="Email" type="email" id="email" required>
+                    <input class="password w-input" maxlength="256" name="password" placeholder="Password" type="password" id="password" required>
+                    <button type="submit" class="signup-button w-button">Sign Up</button>
             </form>
-            <p>Already have an account? <a href="/login">Log in here</a>.</p>
+            <div class="text-block-4">Already have an account? <a href="/login">Login here.</a></div>
         </div>
     </section>
 
