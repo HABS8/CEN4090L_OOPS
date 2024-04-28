@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CART</title>
+    <title>Shopping Cart</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <nav>
         <div class="container">
-            <h1>OOPS!</h1>
+            <h1>Shopping Cart</h1>
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
                 <li><a href="/buying">Buy Item</a></li>
-                <li><a href="/home">HomePage</a></li>
+                <li><a href="/home">Home</a></li>
                 <li><a href="/cart">Shopping Cart</a></li>
                 <li><a href="/checkout">Checkout</a></li>
                 <li><a href="/chat">Chat</a></li>
@@ -22,44 +22,89 @@
             </ul>
         </div>
     </nav>
-    </header>
 
     <main>
         <section id="order-summary">
             <h2>Order Summary</h2>
-            <!-- selected items and total cost -->
-            <div class="item">
-                <img src="item1.jpg" alt="Item 1">
-                <h3>Item 1 Name</h3>
-                <p>Description </p>
-                <p>Price: $</p>
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
-                
-            </div>
-
-            <div class="item">
-                <img src="item2.jpg" alt="Item 2">
-                <h3>Item 2 Name</h3>
-                <p>Description </p>
-                <p>Price: $</p>
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
-                
-            </div>
-            
-
-            <div id="total-cost">
-                <h3>Total:</h3>
-                <p>$</p> 
-            </div>
+            <!-- The items will be dynamically populated from JavaScript -->
         </section>
-        <a href="/checkout" class="checkout-button">Checkout</a>
+        <button class="checkout-button">Checkout</button>
     </main>
+
     <footer>
         <div class="container">
             <p>&copy; 2024 OOPS. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+    // Fetch the cart info
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/cart') 
+            .then(response => response.json())
+            .then(data => {
+                // Populate the cart 
+                populateCart(data.items);
+            })
+            .catch(error => console.error('Error fetching cart data:', error));
+    });
+
+    // Add items to the cart
+    function populateCart(items) {
+        const cartContainer = document.querySelector('#order-summary');
+        
+        // Clear any existing content
+        cartContainer.innerHTML = '';
+        
+        items.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'item';
+            itemElement.setAttribute('data-item-id', item.id);
+
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <p>Price: $${item.price}</p>
+                <label for="quantity-${item.id}">Quantity:</label>
+                <input type="number" id="quantity-${item.id}" name="quantity" min="1" value="${item.quantity}" required>
+            `;
+
+            cartContainer.appendChild(itemElement);
+        });
+
+        // Add total cost
+        const totalCost = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalCostElement = document.createElement('div');
+        totalCostElement.id = 'total-cost';
+        totalCostElement.innerHTML = `<h3>Total Cost:</h3><p>$${totalCost.toFixed(2)}</p>`;
+
+        cartContainer.appendChild(totalCostElement);
+    }
+
+    // Updating item quantities
+    document.querySelector('#order-summary').addEventListener('change', (e) => {
+        if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
+            const itemId = e.target.closest('.item').getAttribute('data-item-id');
+            const newQuantity = e.target.value;
+
+            fetch(`/api/cart/${itemId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantity: newQuantity })
+            })
+                .then(response => response.json())
+                .then(data => {
+                })
+                .catch(error => console.error('Error updating quantity:', error));
+        }
+    });
+
+    document.querySelector('.checkout-button').addEventListener('click', () => {
+        window.location.href = '/checkout'; // Redirects to the checkout page
+    });
+    </script>
 </body>
 </html>
