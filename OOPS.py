@@ -1,4 +1,5 @@
 import os
+import DB_set_up
 from flask import Flask, render_template, request, session, flash, jsonify
 import sqlite3
 import encryption
@@ -6,6 +7,7 @@ import pandas as pd
 import socket
 import sys
 import hmac, hashlib
+
 
 
 app = Flask(__name__)
