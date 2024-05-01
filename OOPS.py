@@ -127,12 +127,15 @@ def fetch_cart_items(user_id):
     conn.close()
     return cart_items
 
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if 'user_id' not in session:
         flash('You need to login first.')
-        return redirect(url_for('login'))
+        return redirect(url_for('index'))
 
     conn = get_db_connection()
     if request.method == 'POST':
@@ -146,7 +149,8 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
-        return redirect(url_for('/'))
+        return redirect(url_for('home'))  # Using the name of the route function
+
 
     if request.method == 'POST':
         username = request.form['username']
