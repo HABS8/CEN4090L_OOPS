@@ -12,32 +12,29 @@
             padding: 0;
             font-family: Arial, sans-serif;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh; /* Ensure the body takes up at least the full height of the viewport */
         }
 
         nav {
             background-color: black;
             color: white;
             padding: 20px 0;
-            text-align: center;
         }
 
-        nav .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        nav h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         nav ul {
             list-style-type: none;
             margin: 0;
             padding: 0;
-            display: flex;
         }
 
         nav ul li {
+            display: inline-block;
             margin-right: 20px;
         }
 
@@ -45,13 +42,12 @@
             text-decoration: none;
             color: white;
             padding: 10px 20px;
+            border: 2px solid black;
             border-radius: 5px;
-            background-color: black;
         }
 
         main {
             padding: 20px;
-            flex: 1; /* Allow main content to grow to fill remaining space */
         }
 
         #listing-form {
@@ -96,7 +92,6 @@
             color: white;
             padding: 20px 0;
             text-align: center;
-            margin-top: auto; /* Push the footer to the bottom of the page */
         }
 
         footer p {
@@ -117,18 +112,17 @@
                 <li><a href="/chat">Chat</a></li>
                 <li><a href="/favorites">Favorites</a></li>
             </ul>
+            <h2>LIST ITEMS</h2>
         </div>
     </nav>
-    
-    <h2 style="margin-top: 0;">LIST ITEMS</h2> <!-- Moved outside the navigation bar -->
 
     <main>
         <section id="listing-form">
             
             <!-- Form for users to list items for sale -->
             <form action="/listing" method="POST" enctype="multipart/form-data">
-                <label for="item-name">Item Name:</label>
-                <input type="text" id="item-name" name="item-name" required>
+                <label for="item_name">Item Name:</label>
+                <input type="text" id="item_name" name="item_name" required>
 
                 <label for="description">Description:</label>
                 <textarea id="description" name="description" rows="4" required></textarea>
@@ -143,7 +137,6 @@
             </form>
         </section>
     </main>
-    
     <footer>
         <div class="container">
             <p>&copy; 2024 OOPS. All rights reserved.</p>
