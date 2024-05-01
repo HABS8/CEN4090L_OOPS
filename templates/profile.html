@@ -18,13 +18,9 @@
             color: white;
             padding: 20px 0;
             text-align: center;
-            width: 100%; /* Set the navigation bar to full width */
         }
 
         nav .container {
-            display: flex;
-            justify-content: center; /* Center the navigation items horizontally */
-            align-items: center;
             width: 90%;
             margin: 0 auto;
         }
@@ -32,7 +28,6 @@
         nav h1 {
             margin: 0;
             font-size: 24px;
-            display: none; /* Hide the header */
         }
 
         nav ul {
@@ -40,6 +35,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            justify-content: center;
         }
 
         nav ul li {
@@ -58,7 +54,6 @@
             padding: 20px;
         }
 
-        /* Additional styles for sections and footer remain unchanged */
         #user-info {
             background-color: white;
             padding: 20px;
@@ -69,6 +64,23 @@
 
         #user-info h2 {
             margin-bottom: 20px;
+        }
+
+        #user-info p {
+            margin-bottom: 10px; /* Add some space between items */
+        }
+
+        #logout-form {
+            text-align: center;
+        }
+
+        #logout-form button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: black;
+            color: white;
+            cursor: pointer;
         }
 
         footer {
@@ -89,12 +101,11 @@
 <body>
     <nav>
         <div class="container">
-            <!-- <h1>Profile</h1> Remove the header -->
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
                 <li><a href="/buying">Buy Item</a></li>
-                <li><a href="/">HomePage</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="/cart">Shopping Cart</a></li>
                 <li><a href="/checkout">Checkout</a></li>
                 <li><a href="/chat">Chat</a></li>
@@ -108,6 +119,9 @@
             <h2>User Information</h2>
             <p>Name: {{ user_details['Username'] }}</p>
             <p>Email: {{ user_details['Email'] }}</p>
+            <form id="logout-form" action="/logout" method="post">
+                <button type="submit">Logout</button>
+            </form>
         </section>
 
         <section id="user-listings">
