@@ -83,15 +83,24 @@
     <!-- Logo -->
     <img src="/static/images/OOPSlogo.svg" alt="OOPS Logo" class="logo">
 
+
     <!-- Login Form Section -->
     <section class="login">
-        <h2>Login</h2>
-        <form action="/login" method="post">
-            <input maxlength="256" name="username" placeholder="Username" type="text" required>
-            <input maxlength="256" name="password" placeholder="Password" type="password" required>
-            <button type="submit">Login</button>
-        </form>
-        <div class="text-block-4">Don't have an account? <a href="/signup" class="link">Sign up here.</a></div>
+        <div class="container">
+            <h2>Login</h2>
+            <form action="/login" method="post" class="form">
+                <label for="username">Username:</label> <!-- Label for username input -->
+                <input class="username w-input" maxlength="256" name="username" placeholder="Username" type="text" id="username" required>
+                <label for="password">Password:</label> <!-- Label for password input -->
+                <input class="password w-input" maxlength="256" name="password" placeholder="Password" type="password" id="password" required>
+                <button type="submit" class="login-button w-button">Login</button>
+            </form>
+            <div class="text-block-4">Don't have an account?  </div>
+            <a href="/signup" class="link">Sign up here.</a>
+            
+            <!-- Error message display (optional) -->
+            <!-- Example: <p class="error-message">{{ error_message }}</p> -->
+        </div>
     </section>
 
     <!-- Footer Section -->

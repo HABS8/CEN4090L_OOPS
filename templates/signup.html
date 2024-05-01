@@ -94,12 +94,14 @@
         <div class="container">
             <h2>Sign Up</h2>
             <form action="/signup" method="post" class="form"> 
-                <input maxlength="256" name="username" placeholder="Username" type="text" required>
-                <input maxlength="256" name="email" placeholder="Email" type="email" required>
-                <input maxlength="256" name="password" placeholder="Password" type="password" required>
-                <button type="submit">Sign Up</button>
+                <input class="username w-input" maxlength="256" name="username" placeholder="Username" type="text" id="username" required>
+                <input class="email w-input" maxlength="256" name="email" placeholder="Email" type="email" id="email" required>
+                <input class="password w-input" maxlength="256" name="password" placeholder="Password" type="password" id="password" required>
+                <!-- Optional: Add password confirmation field -->
+                <!-- <input class="password w-input" maxlength="256" name="confirm_password" placeholder="Confirm Password" type="password" id="confirm-password" required> -->
+                <button type="submit" class="signup-button w-button">Sign Up</button>
             </form>
-            <div class="text-block-4">Already have an account? <a href="/login" class="link">Login here.</a></div>
+            <div class="text-block-4">Already have an account? <a href="/login">Login here.</a></div>
         </div>
     </section>
 

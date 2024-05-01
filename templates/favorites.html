@@ -108,6 +108,7 @@
 <body>
     <nav>
         <div class="container">
+            <h1>Favorites Page</h1>
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
@@ -146,19 +147,22 @@
             })
             .then(data => {
                 const favoritesSection = document.getElementById('favorites');
-                let favoritesHTML = '';
+                let favoritesHTML = '<ul>';
 
                 data.forEach(item => {
                     favoritesHTML += `
-                        <div class="item">
-                            <img src="${item.image}" alt="${item.name}">
-                            <h3>${item.name}</h3>
-                            <p>${item.description}</p>
-                            <button onclick="removeFavorite(${item.id})">Remove from Favorites</button>
-                        </div>
+                        <li>
+                            <div class="item">
+                                <img src="${item.image}" alt="${item.name}">
+                                <h3>${item.name}</h3>
+                                <p>${item.description}</p>
+                                <button onclick="removeFavorite(${item.id})">Remove from Favorites</button>
+                            </div>
+                        </li>
                     `;
                 });
 
+                favoritesHTML += '</ul>';
                 favoritesSection.innerHTML = favoritesHTML;
             })
             .catch(error => {

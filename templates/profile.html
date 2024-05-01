@@ -84,9 +84,9 @@
     </style>
 </head>
 <body>
-
     <nav>
         <div class="container">
+            <h1>Profile</h1>
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
@@ -103,24 +103,13 @@
     <main>
         <section id="user-info">
             <h2>User Information</h2>
-            <p>Name: [User's Name]</p>
-            <p>Email: [User's Email]</p>
-            <!-- Additional user information as needed -->
+            <p>Name: {{ user_details['Username'] }}</p>
+            <p>Email: {{ user_details['Email'] }}</p>
+            <!-- Additional user details can be added here -->
         </section>
 
-        <section id="listed-items">
-            <h2>Listed Items</h2>
-            <div id="listed-items-container">
-                <!-- User's listed items will be populated dynamically -->
-            </div>
-        </section>
-
-        <section id="purchase-history">
-            <h2>Purchase History</h2>
-            <ul id="purchase-history-list">
-                <!-- User's purchase history will be populated dynamically -->
-            </ul>
-        </section>
+        <!-- Additional sections like Listed Items and Purchase History can be added here,
+        optionally populated by JavaScript if dynamic updates are needed -->
     </main>
 
     <footer>
@@ -128,41 +117,5 @@
             <p>&copy; 2024 OOPS. All rights reserved.</p>
         </div>
     </footer>
-
-    <script>
-        // This script fetches user profile information and populates the listed items and purchase history dynamically
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('/api/user-profile') 
-                .then(response => response.json())
-                .then(data => {
-                    const listedItemsContainer = document.querySelector('#listed-items-container');
-                    const purchaseHistoryList = document.querySelector('#purchase-history-list');
-                    
-                    // Populate user's listed items
-                    data.listedItems.forEach(item => {
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'item';
-                        itemElement.innerHTML = `
-                            <img src="${item.image}" alt="${item.name}">
-                            <h3>${item.name}</h3>
-                            <p>${item.description}</p>
-                            <button>Edit</button>
-                            <button>Delete</button>
-                        `;
-                        listedItemsContainer.appendChild(itemElement);
-                    });
-
-                    // Populate user's purchase history
-                    data.purchaseHistory.forEach(purchase => {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `${purchase.itemName} - ${purchase.date}`;
-                        purchaseHistoryList.appendChild(listItem);
-                    });
-                })
-                .catch(error => console.error('Error fetching user profile:', error));
-        });
-    </script>
 </body>
 </html>
-
-

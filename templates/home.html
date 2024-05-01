@@ -139,24 +139,23 @@
     </style>
 </head>
 <body>
-
     <!-- Navigation Bar -->
     <nav>
-        <ul>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/listing">List Item</a></li>
-            <li><a href="/buying">Buy Item</a></li>
-            <li><a href="/">HomePage</a></li> <!-- Updated home link -->
-            <li><a href="/cart">Shopping Cart</a></li>
-            <li><a href="/checkout">Checkout</a></li>
-            <li><a href="/chat">Chat</a></li>
-            <li><a href="/favorites">Favorites</a></li>
-            <li><a href="/logout">Logout</a></li> <!-- Logout link -->
-        </ul>
+        <div class="container">
+            <h1>OOPS!</h1>
+            <ul>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/listing">List Item</a></li>
+                <li><a href="/buying">Buy Item</a></li>
+                <li><a href="/">HomePage</a></li> <!-- Updated home link -->
+                <li><a href="/cart">Shopping Cart</a></li>
+                <li><a href="/checkout">Checkout</a></li>
+                <li><a href="/chat">Chat</a></li>
+                <li><a href="/favorites">Favorites</a></li>
+                <li><a href="/logout">Logout</a></li> <!-- Logout link -->
+            </ul>
+        </div>
     </nav>
-
-    <!-- Logo -->
-    <img src="static/images/OOPSlogo.svg" alt="OOPS Logo" class="logo">
 
     <!-- Main Content for the Home Page -->
     <main>
@@ -175,12 +174,14 @@
         
         <section id="recommended-items">
             <h2>Recommended Items</h2>
+            {% for item in items %}
             <div class="item">
-                <img src="item1.jpg" alt="Item 1">
-                <h3>Item 1</h3>
-                <p>Description</p>
+                <img src="{{ item.ImageURL }}" alt="{{ item.ItemName }}">
+                <h3>{{ item.ItemName }}</h3>
+                <p>{{ item.Description }}</p>
                 <button>Add to Cart</button>
             </div>
+            {% endfor %}
         </section>
     </main>
     <footer>
