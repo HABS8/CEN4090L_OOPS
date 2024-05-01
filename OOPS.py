@@ -255,13 +255,40 @@ def profile():
     user_id = session['user_id']
     conn = get_db_connection()
     cur = conn.cursor()
+
     cur.execute('SELECT * FROM Users WHERE UserId = ?', (user_id,))
     user_details = cur.fetchone()
-    conn.close()
     if not user_details:
         flash('User not found.')
         return redirect(url_for('login'))
-    return render_template('profile.html', user_details=user_details)
+
+    # Fetch listings
+    cur.execute('''
+        SELECT i.ItemName, i.Description, i.Price, p.ImageURL
+        FROM Items i
+        LEFT JOIN Photos p ON i.ItemId = p.ItemId
+        WHERE i.SellerId = ?
+    ''', (user_id,))
+    user_listings = cur.fetchall()
+
+    # Fetch user purchase history with their photos
+    cur.execute('''
+        SELECT p.PurchaseDate, i.ItemName, i.Description, i.Price, ph.ImageURL
+        FROM Purchases p
+        JOIN Items i ON p.ItemId = i.ItemId
+        LEFT JOIN Photos ph ON i.ItemId = ph.ItemId
+        WHERE p.BuyerId = ?
+    ''', (user_id,))
+    purchase_history = cur.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'profile.html',
+        user_details=user_details,
+        user_listings=user_listings,
+        purchase_history=purchase_history
+    )
 
 @app.route('/cart')
 def cart():
