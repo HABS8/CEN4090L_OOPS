@@ -203,7 +203,7 @@ def logout():
     flash('You have been successfully logged out.')
     return redirect(url_for('login'))
 
-
+@app.route('/listing')
 def listing():
     if 'user_id' not in session:
         flash('You need to login first.')
