@@ -308,50 +308,71 @@ def profile():
 @app.route('/add-to-cart', methods=['POST'])
 def add_to_cart():
     if 'user_id' not in session:
-        flash('You need to log in first.')
+        flash('Please log in to add items to the cart.')
         return redirect(url_for('login'))
 
-    # Retrieve the item ID from the form
-    item_id = request.form['item_id']
-    user_id = session['user_id']  # The current user's ID
+    item_name = request.form.get('item_name')  # Retrieve the item name from the form
+    if not item_name:
+        flash("Item name is missing.")
+        return redirect(url_for('buying'))
+
+    user_id = session['user_id']
 
     conn = get_db_connection()
     try:
-        # Insert into the Cart table
-        conn.execute('INSERT INTO Cart (UserId, ItemId, Quantity) VALUES (?, ?, ?)',
-                     (user_id, item_id, 1))  # Set Quantity to 1 by default
+        # Find the item in the Items table by its name
+        item = conn.execute(
+            'SELECT ItemId FROM Items WHERE ItemName = ?',
+            (item_name,)
+        ).fetchone()
 
+        if not item:
+            flash("Item not found.")
+            return redirect(url_for('buying'))
+
+        item_id = item['ItemId']
+
+        # Insert the item into the Cart table with default quantity of 1
+        conn.execute(
+            'INSERT INTO Cart (UserId, ItemId, Quantity) VALUES (?, ?, 1)',
+            (user_id, item_id)
+        )
         conn.commit()
-        flash('Item added to cart!')
-    except sqlite3.IntegrityError as e:
-        flash(f'Error adding to cart: {e}')
+        flash("Item added to cart!")
+    except sqlite3.Error as e:
+        flash(f"Database error: {e}")
     finally:
         conn.close()
 
     return redirect(url_for('cart'))
 
+
+
+
 @app.route('/cart')
 def cart():
     if 'user_id' not in session:
-        flash('You need to login first.')
+        flash('Please log in to view your cart.')
         return redirect(url_for('login'))
 
     user_id = session['user_id']
     conn = get_db_connection()
-    cur = conn.cursor()
-
     try:
-        # Query to get cart items with images
-        cur.execute('SELECT Items.ItemName, Items.Description, Items.Price, Photos.ImageURL FROM Items INNER JOIN Photos ON Items.ItemId = Photos.ItemId WHERE Items.SellerId = ?', (user_id,))
-        cart_items = cur.fetchall()
-    except sqlite3.OperationalError as e:
-        flash('Database error: ' + str(e))
-        cart_items = []  # Ensure cart_items is defined even if query fails
+        # Fetch cart items, joining with Items for item details
+        cart_items = conn.execute(
+            '''
+            SELECT Cart.CartId, Cart.Quantity, Items.ItemId, 
+                   Items.ItemName, Items.Description, Items.Price
+            FROM Cart
+            JOIN Items ON Cart.ItemId = Items.ItemId
+            WHERE Cart.UserId = ?
+            ''',
+            (user_id,)
+        ).fetchall()
     finally:
         conn.close()
 
     return render_template('cart.html', cart_items=cart_items)
-
 
 @app.route('/favorites')
 def favorites():
