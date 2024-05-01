@@ -2,7 +2,7 @@ import os
 import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import bcrypt
-import encryption
+import Encryption
 from flask_socketio import SocketIO
 from flask_mail import Mail, Message
 import DB_set_up
