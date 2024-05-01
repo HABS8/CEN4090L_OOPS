@@ -236,7 +236,7 @@ def listing():
         conn.close()
         
         # Redirect to listing success page after successful listing
-        return redirect(url_for('listing_success'))
+        return redirect(url_for('successful-listing'))
     
     # Render the listing form template for GET requests
     return render_template('listing.html')
@@ -294,12 +294,12 @@ def favorites():
     return render_template('favorites.html', favorite_items=favorite_items)
 
 
-@app.route('/listing-success')
-def listing_success():
+@app.route('/successful-listing')
+def successful_listing():
     if 'user_id' not in session:
         flash('You need to login first.')
         return redirect(url_for('login'))
-    return render_template('listing_success.html')
+    return render_template('successful-listing.html')
 
 
 
