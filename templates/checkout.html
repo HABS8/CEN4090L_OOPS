@@ -5,6 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #F1EFE7;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: black;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        nav h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        #shipping-details, #payment-details {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: black;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: black;
+            color: white;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
     <nav>
@@ -22,6 +135,7 @@
             </ul>
         </div>
     </nav>
+
     <main>
 
         <section id="shipping-details">
