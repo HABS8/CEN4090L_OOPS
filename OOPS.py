@@ -285,6 +285,30 @@ def cart():
 
     return render_template('cart.html', cart_items=cart_items)
 
+@app.route('/add-to-cart', methods=['POST'])
+def add_to_cart():
+    if 'user_id' not in session:
+        flash('You need to log in first.')
+        return redirect(url_for('login'))
+
+    # Retrieve the item ID from the form
+    item_id = request.form['item_id']
+    user_id = session['user_id']  # The current user's ID
+
+    conn = get_db_connection()
+    try:
+        # Insert into the Cart table
+        conn.execute('INSERT INTO Cart (UserId, ItemId, Quantity) VALUES (?, ?, ?)',
+                     (user_id, item_id, 1))  # Set Quantity to 1 by default
+
+        conn.commit()
+        flash('Item added to cart!')
+    except sqlite3.IntegrityError as e:
+        flash(f'Error adding to cart: {e}')
+    finally:
+        conn.close()
+
+    return redirect(url_for('cart'))
 
 @app.route('/favorites')
 def favorites():
