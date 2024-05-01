@@ -201,11 +201,15 @@ def signup():
     return render_template('signup.html')
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    session.pop('user_id', None)
-    flash('You have been successfully logged out.')
-    return redirect(url_for('login'))
+    if request.method == 'POST':
+        session.pop('user_id', None)
+        flash('You have been successfully logged out.')
+        return redirect(url_for('index'))
+    else:
+        flash('Invalid request method for logout.')
+        return redirect(url_for('index'))
 
 
 @app.route('/listing', methods=['GET', 'POST'])
