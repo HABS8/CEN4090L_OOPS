@@ -18,11 +18,12 @@
             color: white;
             padding: 20px 0;
             text-align: center;
+            width: 100%; /* Set the navigation bar to full width */
         }
 
         nav .container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Center the navigation items horizontally */
             align-items: center;
             width: 90%;
             margin: 0 auto;
@@ -31,6 +32,7 @@
         nav h1 {
             margin: 0;
             font-size: 24px;
+            display: none; /* Hide the header */
         }
 
         nav ul {
@@ -56,6 +58,7 @@
             padding: 20px;
         }
 
+        /* Additional styles for sections and footer remain unchanged */
         #user-info {
             background-color: white;
             padding: 20px;
@@ -86,7 +89,7 @@
 <body>
     <nav>
         <div class="container">
-            <h1>Profile</h1>
+            <!-- <h1>Profile</h1> Remove the header -->
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
