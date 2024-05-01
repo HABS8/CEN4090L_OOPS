@@ -7,17 +7,16 @@ from flask_socketio import SocketIO
 from flask_mail import Mail, Message
 import DB_set_up
 
-# Create a Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'your_default_secret_key')
 
-# Database file path
 DATABASE_PATH = 'data/OOPS_DB.db'
 
 # Initialize Flask-SocketIO
 socketio = SocketIO(app)
 
-# Configure email parameters
+
+
 app.config['MAIL_SERVER'] = 'smtp.example.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -25,16 +24,15 @@ app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
 
-# Initialize Flask Mail
 mail = Mail(app)
 
-# Function to establish a database connection
+
 def get_db_connection():
     conn = sqlite3.connect(DATABASE_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
-# Function to create necessary database tables if they don't exist
+
 def create_tables():
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -60,7 +58,6 @@ def create_tables():
         ''')
         conn.commit()
 
-# Function to seed the database with initial data
 def seed_database():
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -79,8 +76,297 @@ def seed_database():
         
         conn.commit()
 
-# Routes and other functionality follow...
+def fetch_favorite_items(user_id):
+    conn = sqlite3.connect('data/OOPS_DB.db')
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT Items.ItemId, Items.ItemName, Items.Description, Items.Price, Photos.ImageURL
+        FROM Favorites
+        JOIN Items ON Favorites.ItemId = Items.ItemId
+        JOIN Photos ON Items.ItemId = Photos.ItemId
+        WHERE Favorites.UserId = ?
+    ''', (user_id,))
+    favorite_items = cur.fetchall()
+    conn.close()
+    return favorite_items
 
-# Main application launch
+def fetch_cart_items(user_id):
+    conn = get_db_connection()
+    cart_items = conn.execute('SELECT * FROM Cart WHERE UserId = ?', (user_id,)).fetchall()
+    conn.close()
+    return cart_items
+
+def calculate_total_price(cart_items):
+    total_price = sum(item['Price'] * item['Quantity'] for item in cart_items)
+    return total_price
+
+def process_payment(total_price):
+    # Simulate payment processing
+    return True
+
+def mark_items_as_purchased(user_id, cart_items):
+    conn = get_db_connection()
+    for item in cart_items:
+        conn.execute('INSERT INTO Purchases (ItemId, BuyerId, PurchaseDate) VALUES (?, ?, ?)',
+                     (item['ItemId'], user_id, datetime.datetime.now()))
+    conn.commit()
+    conn.close()
+
+def send_confirmation_email(user_id, cart_items, total_price):
+    # Simulate sending an email
+    print("Sending email to User ID:", user_id)
+
+create_tables()
+seed_database()
+
+def fetch_cart_items(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM Cart WHERE UserId = ?', (user_id,))
+    cart_items = cur.fetchall()
+    conn.close()
+    return cart_items
+
+
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    if request.method == 'POST':
+        search_query = request.form.get('search', '')
+        items = conn.execute('SELECT * FROM Items WHERE ItemName LIKE ?', ('%' + search_query + '%',)).fetchall()
+    else:
+        items = conn.execute('SELECT * FROM Items ORDER BY ItemId DESC LIMIT 10').fetchall()
+    conn.close()
+    return render_template('home.html', items=items)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if 'user_id' in session:
+        return redirect(url_for('/'))
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM Users WHERE Username = ?', (username,))
+        user = cur.fetchone()
+        conn.close()
+        if user:
+            if encryption.verify_password(password, user['Password']):
+                session['user_id'] = user['UserId']
+                flash('Login successful!')
+                return redirect(url_for('home'))
+            else:
+                flash('Invalid password!')
+        else:
+            flash('Invalid username!')
+        
+        return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if 'user_id' in session:
+        return redirect(url_for('home'))  # Assuming 'home' is the route you want logged-in users to go
+
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode('utf-8')  # Ensure proper decoding
+
+        conn = get_db_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM Users WHERE Username = ? OR Email = ?', (username, email))
+            if cursor.fetchone():
+                flash('Username or email already exists.')
+                return redirect(url_for('signup'))
+            cursor.execute('INSERT INTO Users (Username, Email, Password) VALUES (?, ?, ?)', (username, email, hashed_password))
+            conn.commit()
+            flash('Signup successful! Please login.')
+            return redirect(url_for('login'))
+        finally:
+            conn.close()
+    return render_template('signup.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash('You have been successfully logged out.')
+    return redirect(url_for('login'))
+
+
+@app.route('/listing', methods=['GET', 'POST'])
+def listing():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        item_name = request.form['item_name']
+        category = request.form['category']
+        description = request.form['description']
+        price = request.form['price']
+        seller_id = session.get('user_id')
+        
+        # Connect to the database
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Insert the item into the Items table
+        cur.execute('INSERT INTO Items (ItemName, Category, Description, Price, SellerId) VALUES (?, ?, ?, ?, ?)', 
+                    (item_name, category, description, price, seller_id))
+        item_id = cur.lastrowid
+        
+        # Insert photos into the Photos table
+        photo_urls = request.form.getlist('photos')
+        for url in photo_urls:
+            cur.execute('INSERT INTO Photos (ItemId, ImageURL) VALUES (?, ?)', (item_id, url))
+        
+        # Commit changes and close connection
+        conn.commit()
+        conn.close()
+        
+        # Redirect to listing success page after successful listing
+        return redirect(url_for('listing_success'))
+    
+    # Render the listing form template for GET requests
+    return render_template('listing.html')
+
+
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM Users WHERE UserId = ?', (user_id,))
+    user_details = cur.fetchone()
+    conn.close()
+    if not user_details:
+        flash('User not found.')
+        return redirect(url_for('login'))
+    return render_template('profile.html', user_details=user_details)
+
+@app.route('/cart')
+def cart():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    try:
+        # Query to get cart items with images
+        cur.execute('SELECT Items.ItemName, Items.Description, Items.Price, Photos.ImageURL FROM Items INNER JOIN Photos ON Items.ItemId = Photos.ItemId WHERE Items.SellerId = ?', (user_id,))
+        cart_items = cur.fetchall()
+    except sqlite3.OperationalError as e:
+        flash('Database error: ' + str(e))
+        cart_items = []  # Ensure cart_items is defined even if query fails
+    finally:
+        conn.close()
+
+    return render_template('cart.html', cart_items=cart_items)
+
+
+@app.route('/favorites')
+def favorites():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    # Assuming you have a function to fetch favorite items from the database
+    favorite_items = fetch_favorite_items(session['user_id'])
+
+    return render_template('favorites.html', favorite_items=favorite_items)
+
+
+@app.route('/listing-success')
+def listing_success():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+    return render_template('listing_success.html')
+
+
+
+@app.route('/buying')
+def buying():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM Items')
+    items = cur.fetchall()
+    conn.close()
+
+    return render_template('buying.html', items=items)
+
+@app.route('/checkout')
+def checkout():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    cart_items = fetch_cart_items(user_id)
+    if not cart_items:
+        flash('No items in the cart.')
+        return redirect(url_for('cart'))
+    
+    total_price = calculate_total_price(cart_items)
+    payment_successful = process_payment(total_price)
+
+    if payment_successful:
+        mark_items_as_purchased(user_id, cart_items)
+        send_confirmation_email(user_id, cart_items, total_price)
+        clear_cart(user_id)
+        flash('Purchase successful!')
+        return redirect(url_for('purchase_complete'))
+    else:
+        flash('Payment failed. Please try again.')
+        return redirect(url_for('cart'))
+
+
+@app.route('/purchase-complete')
+def purchase_complete():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    return render_template('purchase-complete.html')
+
+# WebSocket route for handling chat messages
+@socketio.on('message')
+def handle_message(message):
+    # Broadcast the received message to all connected clients
+    socketio.send(message, broadcast=True)
+
+# Chat page route
+@app.route('/chat')
+def chat():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    return render_template('chat.html')
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
