@@ -204,41 +204,45 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/listing', methods=['GET', 'POST'])
 def listing():
     if 'user_id' not in session:
         flash('You need to login first.')
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        item_name = request.form['item_name']
-        category = request.form['category']
-        description = request.form['description']
-        price = request.form['price']
+        # Fix key names to match form fields
+        item_name = request.form.get('item_name', None)
+        description = request.form.get('description', None)
+        price = request.form.get('price', None)
         seller_id = session.get('user_id')
         
-        # Connect to the database
-        conn = get_db_connection()
-        cur = conn.cursor()
+        if item_name and description and price:
+            # Connect to the database
+            conn = get_db_connection()
+            cur = conn.cursor()
+            
+            cur.execute(
+                'INSERT INTO Items (ItemName, Description, Price, SellerId) VALUES (?, ?, ?, ?)', 
+                (item_name, description, price, seller_id)
+            )
+            item_id = cur.lastrowid
+            
+            photo_urls = request.form.getlist('photos')  
+            if photo_urls:
+                for url in photo_urls:
+                    cur.execute(
+                        'INSERT INTO Photos (ItemId, ImageURL) VALUES (?, ?)', 
+                        (item_id, url)
+                    )
+
+            conn.commit()
+            conn.close()
+            
+            return redirect(url_for('successful_listing'))
         
-        # Insert the item into the Items table
-        cur.execute('INSERT INTO Items (ItemName, Category, Description, Price, SellerId) VALUES (?, ?, ?, ?, ?)', 
-                    (item_name, category, description, price, seller_id))
-        item_id = cur.lastrowid
-        
-        # Insert photos into the Photos table
-        photo_urls = request.form.getlist('photos')
-        for url in photo_urls:
-            cur.execute('INSERT INTO Photos (ItemId, ImageURL) VALUES (?, ?)', (item_id, url))
-        
-        # Commit changes and close connection
-        conn.commit()
-        conn.close()
-        
-        # Redirect to listing success page after successful listing
-        return redirect(url_for('successful-listing'))
-    
-    # Render the listing form template for GET requests
+        flash("Please fill in all required fields.")
+        return redirect(url_for('listing'))
+
     return render_template('listing.html')
 
 
