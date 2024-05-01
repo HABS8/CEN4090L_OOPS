@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOME</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="styles.css"> 
     <style>
         body {
             background-color: #F1EFE7;
@@ -12,6 +12,9 @@
             padding: 0;
             font-family: Arial, sans-serif;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         nav {
@@ -42,6 +45,11 @@
 
         main {
             padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         #home {
@@ -81,6 +89,11 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             grid-gap: 20px;
+            text-align: center; /* Center the recommended items */
+        }
+
+        #recommended-items h2 {
+            margin-bottom: 20px; /* Add space between "Recommended Items" and items */
         }
 
         .item {
@@ -126,6 +139,7 @@
             color: white;
             padding: 20px 0;
             text-align: center;
+            width: 100%;
         }
 
         footer p {
@@ -142,12 +156,11 @@
     <!-- Navigation Bar -->
     <nav>
         <div class="container">
-            <h1>OOPS!</h1>
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
                 <li><a href="/buying">Buy Item</a></li>
-                <li><a href="/">HomePage</a></li> <!-- Updated home link -->
+                <li><a href="/">Home</a></li> <!-- Updated home link -->
                 <li><a href="/cart">Shopping Cart</a></li>
                 <li><a href="/checkout">Checkout</a></li>
                 <li><a href="/chat">Chat</a></li>
@@ -156,6 +169,9 @@
             </ul>
         </div>
     </nav>
+
+    <!-- Logo -->
+    <img src="/static/images/OOPSlogo.svg" alt="OOPS Logo" class="logo">
 
     <!-- Main Content for the Home Page -->
     <main>
