@@ -6,39 +6,29 @@
     <title>Buy Item</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* Recreate the style from listing.html */
         body {
             background-color: #F1EFE7;
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            text-align: center;
         }
 
         nav {
             background-color: black;
             color: white;
             padding: 20px 0;
-            text-align: center;
-        }
-
-        nav .container {
-            display: flex;
-            justify-content: center; /* Center the navigation bar */
-            align-items: center;
-        }
-
-        nav h1 {
-            margin: 0;
-            font-size: 24px;
         }
 
         nav ul {
             list-style-type: none;
             margin: 0;
             padding: 0;
-            display: flex;
         }
 
         nav ul li {
+            display: inline-block;
             margin-right: 20px;
         }
 
@@ -46,8 +36,8 @@
             text-decoration: none;
             color: white;
             padding: 10px 20px;
+            border: 2px solid black;
             border-radius: 5px;
-            background-color: black;
         }
 
         main {
@@ -59,31 +49,28 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        #available-items ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #available-items li {
             margin-bottom: 20px;
         }
 
-        #available-items h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
+        #available-items .item {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
         }
 
-        .item {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        .item img {
-            max-width: 100px;
-            margin-bottom: 10px;
-        }
-
-        .item h3 {
-            margin-top: 0;
-        }
-
-        .item p {
-            margin: 10px 0;
+        #available-items .item img {
+            max-width: 100%;
+            border-radius: 10px;
         }
 
         footer {
@@ -91,18 +78,10 @@
             color: white;
             padding: 20px 0;
             text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
         }
 
         footer p {
             margin: 0;
-        }
-
-        .container {
-            width: 90%;
-            margin: 0 auto;
         }
     </style>
 </head>
@@ -125,7 +104,6 @@
     <main>
         <section id="available-items">
             <h2>Available Items for Purchase</h2>
-            <!-- Display available items for purchase -->
             <ul>
                 {% for item in items %}
                 <li>
@@ -134,9 +112,8 @@
                         <h3>{{ item.name }}</h3>
                         <p>{{ item.description }}</p>
                         <p>Price: {{ item.price }}</p>
-                        <!-- Add to cart button -->
                         <form action="/add-to-cart" method="POST">
-                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                            <input type="hidden" name="item_name" value="{{ item.ItemName}}">
                             <button type="submit">Add to Cart</button>
                         </form>
                     </div>
@@ -148,7 +125,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2024. All rights reserved.</p>
+            <p>&copy; 2024 OOPS. All rights reserved.</p>
         </div>
     </footer>
 </body>
