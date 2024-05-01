@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* Matching styles from buying.html */
         body {
             background-color: #F1EFE7;
             margin: 0;
@@ -20,17 +19,10 @@
             text-align: center;
         }
 
-        nav h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
         nav ul {
             list-style-type: none;
-            margin: 0;
             padding: 0;
+            margin: 0;
         }
 
         nav ul li {
@@ -42,7 +34,6 @@
             text-decoration: none;
             color: white;
             padding: 10px 20px;
-            border: 2px solid black;
             border-radius: 5px;
         }
 
@@ -50,90 +41,35 @@
             padding: 20px;
         }
 
-        .shopping-cart-text {
-            background-color: #F1EFE7; /* Cream color background */
-            color: black; /* Text color */
-            padding: 20px 0;
-            text-align: center;
-            margin-bottom: 20px; /* Add margin to create space between the navigation and shopping cart text */
-        }
-
-        .shopping-cart-text h2 {
-            margin: 0; /* Remove default margin */
-        }
-
         #order-summary {
             background-color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #order-summary .item {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        #order-summary h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        .item {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        .item img {
-            max-width: 100px;
-            margin-bottom: 10px;
-        }
-
-        .item h3 {
+        #order-summary .item h3 {
             margin-top: 0;
-        }
-
-        .item p {
-            margin: 10px 0;
-        }
-
-        .item label {
-            font-weight: bold;
-        }
-
-        .item input[type="number"] {
-            width: 60px;
-        }
-
-        .checkout-button {
-            display: inline-block;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: black;
-            color: white;
-            cursor: pointer;
         }
 
         footer {
             background-color: black;
-            color: white;
-            padding: 20px 0;
+            color white;
+            padding: 20px;
             text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        footer p {
-            margin: 0;
-        }
-
-        .logo {
-            width: 200px; /* Adjust width as needed */
-            margin: 20px auto; /* Center the logo horizontally and add margin */
-            display: block;
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav>
         <div class="container">
             <ul>
@@ -149,27 +85,29 @@
         </div>
     </nav>
 
-    <div class="shopping-cart-text">
-        <h2>Shopping Cart</h2>
-    </div>
-
+    <!-- Main section with order summary -->
     <main>
         <section id="order-summary">
             <h2>Order Summary</h2>
-            {% for item in cart_items %}
-            <div class="item" data-item-id="{{ item['ItemId'] }}">
-                <img src="{{ item['ImageURL'] }}" alt="{{ item['ItemName'] }}">
-                <h3>{{ item['ItemName'] }}</h3>
-                <p>{{ item['Description'] }}</p>
-                <p>Price: ${{ item['Price'] }}</p>
-                <label for="quantity-{{ item['ItemId'] }}">Quantity:</label>
-                <input type="number" id="quantity-{{ item['ItemId'] }}" name="quantity" min="1" value="1" required>
-            </div>
-            {% endfor %}
+            {% if cart_items %}
+                {% for item in cart_items %}
+                <div class="item" data-item-id="{{ item['ItemId'] }}">
+                    <h3>{{ item['ItemName'] }}</h3>
+                    <p>{{ item['Description'] }}</p>
+                    <p>Price: ${{ item['Price'] }}</p>
+                    <label for="quantity-{{ item['ItemId'] }}">Quantity:</label>
+                    <input type="number" id="quantity-{{ item['ItemId'] }}"
+                           name="quantity" min="1" value="{{ item['Quantity'] }}" required>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Your cart is empty.</p>
+            {% endif %}
         </section>
-        <button class="checkout-button">Checkout</button>
+        <button class="checkout-button">Checkout</button> <!-- Proceed to checkout -->
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
             <p>&copy; 2024 OOPS. All rights reserved.</p>
@@ -177,28 +115,7 @@
     </footer>
 
     <script>
-    document.querySelector('#order-summary').addEventListener('change', (e) => {
-        if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
-            const itemId = e.target.closest('.item').getAttribute('data-item-id');
-            const newQuantity = e.target.value;
-            fetch(`/api/cart/${itemId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantity: newQuantity })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Optionally update the UI to reflect the quantity update
-            })
-            .catch(error => console.error('Error updating quantity:', error));
-        }
-    });
-
-    document.querySelector('.checkout-button').addEventListener('click', () => {
-        window.location.href = '/checkout'; // Redirects to the checkout page
-    });
+    // Script to handle updating quantities and removing items
     </script>
 </body>
 </html>
