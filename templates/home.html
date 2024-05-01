@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <!-- Navigation Bar -->
     <nav>
         <div class="container">
@@ -21,6 +20,7 @@
                 <li><a href="/checkout">Checkout</a></li>
                 <li><a href="/chat">Chat</a></li>
                 <li><a href="/favorites">Favorites</a></li>
+                <li><a href="/logout">Logout</a></li> <!-- Logout link -->
             </ul>
         </div>
     </nav>
@@ -33,21 +33,24 @@
                 <p class="explore-text">Explore and shop for trendy apparel.</p>
             </div>
             <div class="search-bar">
-                <input type="text" placeholder="Search...">
-                <button type="submit">Search</button>
+                <form method="POST">
+                    <input type="text" name="search" placeholder="Search...">
+                    <button type="submit">Search</button>
+                </form>
             </div>
         </section>
         
         <section id="recommended-items">
             <h2>Recommended Items</h2>
-            
+            {% for item in items %}
             <div class="item">
-                <img src="item1.jpg" alt="Item 1">
-                <h3>Item 1</h3>
-                <p>Description</p>
+                <img src="{{ item.ImageURL }}" alt="{{ item.ItemName }}">
+                <h3>{{ item.ItemName }}</h3>
+                <p>{{ item.Description }}</p>
                 <button>Add to Cart</button>
             </div>
-        
+            {% endfor %}
+        </section>
     </main>
     <footer>
         <div class="container">

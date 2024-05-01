@@ -1,32 +1,27 @@
+# encryption.py
 from Crypto.Cipher import AES
-import string, base64
+import base64
+import bcrypt
 
-
-# declaration and initialisation of AESCipher class
-class AESCipher(object):
-
-    # class constructor that initializes the class variables of key and iv
+class AESCipher:
     def __init__(self, key, iv):
         self.key = key
         self.iv = iv
 
-    # encrypts the raw variable
     def encrypt(self, raw):
-        self.cipher = AES.new(self.key, AES.MODE_CFB, self.iv)
-        ciphertext = self.cipher.encrypt(raw)
-        encoded = base64.b64encode(ciphertext)
-        return encoded
+        raw = raw.encode('utf-8') if isinstance(raw, str) else raw
+        cipher = AES.new(self.key, AES.MODE_CFB, self.iv)
+        ciphertext = cipher.encrypt(raw)
+        return base64.b64encode(ciphertext).decode('utf-8')
 
-    # decrypts the raw variable
-    def decrypt(self, raw):
-        decoded = base64.b64decode(raw)
-        self.cipher = AES.new(self.key, AES.MODE_CFB, self.iv)
-        decrypted = self.cipher.decrypt(decoded)
-        return str(decrypted, 'utf-8')
+    def decrypt(self, enc):
+        enc = base64.b64decode(enc)
+        cipher = AES.new(self.key, AES.MODE_CFB, self.iv)
+        decrypted = cipher.decrypt(enc)
+        return decrypted.decode('utf-8')
 
-# initialize the key and iv variables
-key = b'BLhgpCL81fdLBk23HkZp8BgbT913cqt0'
-iv = b'OWFJATh1Zowac2xr'
+def hash_password(password):
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
-# declares the object cipher and initialize the key and iv variables for the object
-cipher = AESCipher(key, iv)
+def verify_password(password, hashed):
+    return bcrypt.checkpw(password.encode(), hashed.encode())

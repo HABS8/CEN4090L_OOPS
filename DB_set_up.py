@@ -4,15 +4,17 @@ import sqlite3
 conn = sqlite3.connect('data/OOPS_DB.db')
 cur = conn.cursor()
 
-# SQL command to create the Users table
+# Correct SQL command to create the Users table with a Password column
 create_users_table = '''
 CREATE TABLE IF NOT EXISTS Users (
     UserId INTEGER PRIMARY KEY AUTOINCREMENT,
     Username TEXT NOT NULL,
     Email TEXT UNIQUE NOT NULL,
+    Password TEXT NOT NULL,  # Include the Password column
     IsSeller BOOLEAN DEFAULT 0
 );
 '''
+
 
 # SQL command to create the Items table
 create_items_table = '''
@@ -84,6 +86,4 @@ cur.execute(create_favorites_table)
 # Commit changes and close the connection
 conn.commit()
 conn.close()
-
-print("Database and tables created.")
 
