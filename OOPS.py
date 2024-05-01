@@ -203,7 +203,8 @@ def logout():
     flash('You have been successfully logged out.')
     return redirect(url_for('login'))
 
-@app.route('/listing')
+
+@app.route('/listing', methods=['GET', 'POST'])
 def listing():
     if 'user_id' not in session:
         flash('You need to login first.')
@@ -221,28 +222,34 @@ def listing():
             conn = get_db_connection()
             cur = conn.cursor()
             
+            # Insert the item into the Items table
             cur.execute(
                 'INSERT INTO Items (ItemName, Description, Price, SellerId) VALUES (?, ?, ?, ?)', 
                 (item_name, description, price, seller_id)
             )
             item_id = cur.lastrowid
             
-            photo_urls = request.form.getlist('photos')  
+            # Insert photos into the Photos table (if needed)
+            photo_urls = request.form.getlist('photos')  # Check correct key
             if photo_urls:
                 for url in photo_urls:
                     cur.execute(
                         'INSERT INTO Photos (ItemId, ImageURL) VALUES (?, ?)', 
                         (item_id, url)
                     )
-
+            
+            # Commit changes and close connection
             conn.commit()
             conn.close()
             
+            # Redirect to listing success page after successful listing
             return redirect(url_for('successful_listing'))
         
+        # If any required field is missing, flash a message
         flash("Please fill in all required fields.")
         return redirect(url_for('listing'))
 
+    # Render the listing form template for GET requests
     return render_template('listing.html')
 
 
@@ -290,28 +297,6 @@ def profile():
         purchase_history=purchase_history
     )
 
-@app.route('/cart')
-def cart():
-    if 'user_id' not in session:
-        flash('You need to login first.')
-        return redirect(url_for('login'))
-
-    user_id = session['user_id']
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    try:
-        # Query to get cart items with images
-        cur.execute('SELECT Items.ItemName, Items.Description, Items.Price, Photos.ImageURL FROM Items INNER JOIN Photos ON Items.ItemId = Photos.ItemId WHERE Items.SellerId = ?', (user_id,))
-        cart_items = cur.fetchall()
-    except sqlite3.OperationalError as e:
-        flash('Database error: ' + str(e))
-        cart_items = []  # Ensure cart_items is defined even if query fails
-    finally:
-        conn.close()
-
-    return render_template('cart.html', cart_items=cart_items)
-
 @app.route('/add-to-cart', methods=['POST'])
 def add_to_cart():
     if 'user_id' not in session:
@@ -336,6 +321,29 @@ def add_to_cart():
         conn.close()
 
     return redirect(url_for('cart'))
+
+@app.route('/cart')
+def cart():
+    if 'user_id' not in session:
+        flash('You need to login first.')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    try:
+        # Query to get cart items with images
+        cur.execute('SELECT Items.ItemName, Items.Description, Items.Price, Photos.ImageURL FROM Items INNER JOIN Photos ON Items.ItemId = Photos.ItemId WHERE Items.SellerId = ?', (user_id,))
+        cart_items = cur.fetchall()
+    except sqlite3.OperationalError as e:
+        flash('Database error: ' + str(e))
+        cart_items = []  # Ensure cart_items is defined even if query fails
+    finally:
+        conn.close()
+
+    return render_template('cart.html', cart_items=cart_items)
+
 
 @app.route('/favorites')
 def favorites():
