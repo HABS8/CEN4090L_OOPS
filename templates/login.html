@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
 </head>
 <body>
 
@@ -13,12 +13,17 @@
         <div class="container">
             <h2>Login</h2>
             <form action="/login" method="post" class="form">
+                <label for="username">Username:</label> <!-- Label for username input -->
                 <input class="username w-input" maxlength="256" name="username" placeholder="Username" type="text" id="username" required>
+                <label for="password">Password:</label> <!-- Label for password input -->
                 <input class="password w-input" maxlength="256" name="password" placeholder="Password" type="password" id="password" required>
                 <button type="submit" class="login-button w-button">Login</button>
             </form>
             <div class="text-block-4">Don't have an account?  </div>
-              <a href="/signup" class="link"> Sign up here.</a>
+            <a href="/signup" class="link">Sign up here.</a>
+            
+            <!-- Error message display (optional) -->
+            <!-- Example: <p class="error-message">{{ error_message }}</p> -->
         </div>
     </section>
 

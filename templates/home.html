@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOME</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -15,7 +15,7 @@
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
                 <li><a href="/buying">Buy Item</a></li>
-                <li><a href="/home">HomePage</a></li>
+                <li><a href="/">HomePage</a></li> <!-- Updated home link -->
                 <li><a href="/cart">Shopping Cart</a></li>
                 <li><a href="/checkout">Checkout</a></li>
                 <li><a href="/chat">Chat</a></li>
@@ -33,7 +33,7 @@
                 <p class="explore-text">Explore and shop for trendy apparel.</p>
             </div>
             <div class="search-bar">
-                <form method="POST">
+                <form method="POST" action="/"> <!-- Specify the action attribute -->
                     <input type="text" name="search" placeholder="Search...">
                     <button type="submit">Search</button>
                 </form>
