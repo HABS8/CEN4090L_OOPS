@@ -26,7 +26,16 @@
     <main>
         <section id="order-summary">
             <h2>Order Summary</h2>
-            <!-- The items will be dynamically populated from JavaScript -->
+            {% for item in cart_items %}
+            <div class="item" data-item-id="{{ item['ItemId'] }}">
+                <img src="{{ item['ImageURL'] }}" alt="{{ item['ItemName'] }}">
+                <h3>{{ item['ItemName'] }}</h3>
+                <p>{{ item['Description'] }}</p>
+                <p>Price: ${{ item['Price'] }}</p>
+                <label for="quantity-{{ item['ItemId'] }}">Quantity:</label>
+                <input type="number" id="quantity-{{ item['ItemId'] }}" name="quantity" min="1" value="1" required>
+            </div>
+            {% endfor %}
         </section>
         <button class="checkout-button">Checkout</button>
     </main>
@@ -38,56 +47,10 @@
     </footer>
 
     <script>
-    // Fetch the cart info
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('/api/cart') 
-            .then(response => response.json())
-            .then(data => {
-                // Populate the cart 
-                populateCart(data.items);
-            })
-            .catch(error => console.error('Error fetching cart data:', error));
-    });
-
-    // Add items to the cart
-    function populateCart(items) {
-        const cartContainer = document.querySelector('#order-summary');
-        
-        // Clear any existing content
-        cartContainer.innerHTML = '';
-        
-        items.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'item';
-            itemElement.setAttribute('data-item-id', item.id);
-
-            itemElement.innerHTML = `
-                <img src="${item.image}" alt="${item.name}">
-                <h3>${item.name}</h3>
-                <p>${item.description}</p>
-                <p>Price: $${item.price}</p>
-                <label for="quantity-${item.id}">Quantity:</label>
-                <input type="number" id="quantity-${item.id}" name="quantity" min="1" value="${item.quantity}" required>
-            `;
-
-            cartContainer.appendChild(itemElement);
-        });
-
-        // Add total cost
-        const totalCost = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const totalCostElement = document.createElement('div');
-        totalCostElement.id = 'total-cost';
-        totalCostElement.innerHTML = `<h3>Total Cost:</h3><p>$${totalCost.toFixed(2)}</p>`;
-
-        cartContainer.appendChild(totalCostElement);
-    }
-
-    // Updating item quantities
     document.querySelector('#order-summary').addEventListener('change', (e) => {
         if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
             const itemId = e.target.closest('.item').getAttribute('data-item-id');
             const newQuantity = e.target.value;
-
             fetch(`/api/cart/${itemId}`, {
                 method: 'PUT',
                 headers: {
@@ -95,10 +58,11 @@
                 },
                 body: JSON.stringify({ quantity: newQuantity })
             })
-                .then(response => response.json())
-                .then(data => {
-                })
-                .catch(error => console.error('Error updating quantity:', error));
+            .then(response => response.json())
+            .then(data => {
+                // Optionally update the UI to reflect the quantity update
+            })
+            .catch(error => console.error('Error updating quantity:', error));
         }
     });
 

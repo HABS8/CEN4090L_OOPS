@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <nav>
         <div class="container">
             <h1>Profile</h1>
             <ul>
-                <li><a href="/profile">Profile</a></li> <!-- Updated link -->
+                <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
                 <li><a href="/buying">Buy Item</a></li>
-                <li><a href="/">HomePage</a></li> <!-- Updated link -->
+                <li><a href="/">HomePage</a></li>
                 <li><a href="/cart">Shopping Cart</a></li>
                 <li><a href="/checkout">Checkout</a></li>
                 <li><a href="/chat">Chat</a></li>
@@ -26,24 +26,13 @@
     <main>
         <section id="user-info">
             <h2>User Information</h2>
-            <p>Name: [User's Name]</p> <!-- Replace placeholder with actual user data -->
-            <p>Email: [User's Email]</p> <!-- Replace placeholder with actual user data -->
-            <!-- Add other user information as needed -->
+            <p>Name: {{ user_details['Username'] }}</p>
+            <p>Email: {{ user_details['Email'] }}</p>
+            <!-- Additional user details can be added here -->
         </section>
 
-        <section id="listed-items">
-            <h2>Listed Items</h2>
-            <div id="listed-items-container">
-                <!-- User's listed items will be populated dynamically using JavaScript -->
-            </div>
-        </section>
-
-        <section id="purchase-history">
-            <h2>Purchase History</h2>
-            <ul id="purchase-history-list">
-                <!-- User's purchase history will be populated dynamically using JavaScript -->
-            </ul>
-        </section>
+        <!-- Additional sections like Listed Items and Purchase History can be added here,
+        optionally populated by JavaScript if dynamic updates are needed -->
     </main>
 
     <footer>
@@ -51,46 +40,5 @@
             <p>&copy; 2024 OOPS. All rights reserved.</p>
         </div>
     </footer>
-
-    <!-- JavaScript to fetch and populate user profile data -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('/api/user-profile') // Assuming this endpoint returns user profile data
-            .then(response => response.json())
-            .then(data => {
-                // Update user information
-                document.querySelector('#user-info').innerHTML = `
-                    <h2>User Information</h2>
-                    <p>Name: ${data.name}</p>
-                    <p>Email: ${data.email}</p>
-                    <!-- Add other user information as needed -->
-                `;
-
-                // Populate user's listed items
-                const listedItemsContainer = document.querySelector('#listed-items-container');
-                data.listedItems.forEach(item => {
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'item';
-                    itemElement.innerHTML = `
-                        <img src="${item.image}" alt="${item.name}">
-                        <h3>${item.name}</h3>
-                        <p>${item.description}</p>
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    `;
-                    listedItemsContainer.appendChild(itemElement);
-                });
-
-                // Populate user's purchase history
-                const purchaseHistoryList = document.querySelector('#purchase-history-list');
-                data.purchaseHistory.forEach(purchase => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `${purchase.itemName} - ${purchase.date}`;
-                    purchaseHistoryList.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error fetching user profile:', error));
-    });
-    </script>
 </body>
 </html>

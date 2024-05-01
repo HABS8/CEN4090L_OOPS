@@ -27,7 +27,7 @@
         <section id="shipping-details">
             <h2>Shipping Details</h2>
             <!-- input shipping info -->
-            <form action="process_checkout.php" method="POST">
+            <form action="/process_shipping" method="POST">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
 
@@ -44,7 +44,7 @@
         <section id="payment-details">
             <h2>Payment Details</h2>
             <!-- input payment info -->
-            <form action="process_payment.php" method="POST">
+            <form action="/process_payment" method="POST">
                 <label for="card-number">Credit Card Number:</label>
                 <input type="text" id="card-number" name="card-number" required>
 
@@ -56,7 +56,6 @@
 
                 <label for="card-holder-name">Cardholder Name:</label>
                 <input type="text" id="card-holder-name" name="card-holder-name" required>
-
 
                 <button type="submit">Complete Purchase</button>
             </form>

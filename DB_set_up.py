@@ -4,17 +4,16 @@ import sqlite3
 conn = sqlite3.connect('data/OOPS_DB.db')
 cur = conn.cursor()
 
-# Correct SQL command to create the Users table with a Password column
+# SQL command to create the Users table with a Password column
 create_users_table = '''
 CREATE TABLE IF NOT EXISTS Users (
     UserId INTEGER PRIMARY KEY AUTOINCREMENT,
     Username TEXT NOT NULL,
     Email TEXT UNIQUE NOT NULL,
-    Password TEXT NOT NULL,  # Include the Password column
+    Password TEXT NOT NULL,
     IsSeller BOOLEAN DEFAULT 0
 );
 '''
-
 
 # SQL command to create the Items table
 create_items_table = '''
@@ -75,15 +74,31 @@ CREATE TABLE IF NOT EXISTS Favorites (
 );
 '''
 
-# Execute the SQL commands to create the tables
-cur.execute(create_users_table)
-cur.execute(create_items_table)
-cur.execute(create_photos_table)
-cur.execute(create_purchases_table)
-cur.execute(create_messages_table)
-cur.execute(create_favorites_table)
+# SQL command to create the Cart table
+create_cart_table = '''
+CREATE TABLE IF NOT EXISTS Cart (
+    CartId INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserId INTEGER NOT NULL,
+    ItemId INTEGER NOT NULL,
+    Quantity INTEGER NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
+    FOREIGN KEY (ItemId) REFERENCES Items(ItemId)
+);
+'''
 
-# Commit changes and close the connection
+# List of SQL commands
+sql_commands = [
+    create_users_table, create_items_table, create_photos_table,
+    create_purchases_table, create_messages_table, create_favorites_table, create_cart_table
+]
+
+# Execute each SQL command
+for command in sql_commands:
+    try:
+        cur.execute(command)
+    except sqlite3.OperationalError as e:
+        print(f"An error occurred while executing SQL: {e}")
+        break
+
 conn.commit()
 conn.close()
-
