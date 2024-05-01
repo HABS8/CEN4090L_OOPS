@@ -412,36 +412,77 @@ def buying():
 @app.route('/checkout')
 def checkout():
     if 'user_id' not in session:
-        flash('You need to login first.')
+        flash('Please log in to access checkout.')
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    cart_items = fetch_cart_items(user_id)
-    if not cart_items:
-        flash('No items in the cart.')
-        return redirect(url_for('cart'))
-    
-    total_price = calculate_total_price(cart_items)
-    payment_successful = process_payment(total_price)
+    conn = get_db_connection()
+    try:
+        # Fetch cart items and join with Items to get details
+        cart_items = conn.execute(
+            '''
+            SELECT Cart.CartId, Cart.Quantity, Items.ItemId, 
+                   Items.ItemName, Items.Description, Items.Price
+            FROM Cart
+            JOIN Items ON Cart.ItemId = Items.ItemId
+            WHERE Cart.UserId = ?
+            ''',
+            (user_id,)
+        ).fetchall()
 
-    if payment_successful:
-        mark_items_as_purchased(user_id, cart_items)
-        send_confirmation_email(user_id, cart_items, total_price)
-        clear_cart(user_id)
-        flash('Purchase successful!')
-        return redirect(url_for('purchase_complete'))
-    else:
-        flash('Payment failed. Please try again.')
-        return redirect(url_for('cart'))
+        # Calculate the total price based on item price and quantity
+        total_price = sum(item['Price'] * item['Quantity'] for item in cart_items)
+    finally:
+        conn.close()
 
+    return render_template('checkout.html', cart_items=cart_items, total_price=total_price)
 
-@app.route('/purchase-complete')
-def purchase_complete():
+@app.route('/process_payment', methods=['POST'])
+def process_payment():
     if 'user_id' not in session:
-        flash('You need to login first.')
+        flash("Please log in to complete your purchase.")
         return redirect(url_for('login'))
 
-    return render_template('purchase-complete.html')
+    user_id = session['user_id']
+
+    # Simulate payment processing (e.g., validate card details, process payment, etc.)
+    # You can add payment processing logic here, if needed.
+
+    # After processing payment, mark the items as purchased
+    conn = get_db_connection()
+    try:
+        # Fetch cart items for the user
+        cart_items = conn.execute(
+            'SELECT * FROM Cart WHERE UserId = ?',
+            (user_id,)
+        ).fetchall()
+
+        # Mark each item as purchased and clear the cart
+        for item in cart_items:
+            item_id = item['ItemId']
+            # Insert into Purchases or similar table to record the purchase
+            conn.execute(
+                'INSERT INTO Purchases (ItemId, BuyerId, PurchaseDate) VALUES (?, ?, datetime("now"))',
+                (item_id, user_id)
+            )
+            # Remove the item from the Cart
+            conn.execute(
+                'DELETE FROM Cart WHERE UserId = ? AND ItemId = ?',
+                (user_id, item_id)
+            )
+        conn.commit()
+    finally:
+        conn.close()
+
+    return redirect(url_for('purchase_success'))  # Redirect to the success page
+
+
+
+
+@app.route('/purchase_success')
+def purchase_success():
+    return render_template('purchase_success.html')  # Renders the success page
+
 
 # WebSocket route for handling chat messages
 @socketio.on('message')
