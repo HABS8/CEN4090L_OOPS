@@ -21,6 +21,9 @@
         }
 
         nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             width: 90%;
             margin: 0 auto;
         }
@@ -35,7 +38,6 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
         }
 
         nav ul li {
@@ -84,11 +86,12 @@
 <body>
     <nav>
         <div class="container">
+            <h1>Profile</h1>
             <ul>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/listing">List Item</a></li>
                 <li><a href="/buying">Buy Item</a></li>
-                <li><a href="/">Home</a></li>
+                <li><a href="/">HomePage</a></li>
                 <li><a href="/cart">Shopping Cart</a></li>
                 <li><a href="/checkout">Checkout</a></li>
                 <li><a href="/chat">Chat</a></li>
@@ -102,11 +105,43 @@
             <h2>User Information</h2>
             <p>Name: {{ user_details['Username'] }}</p>
             <p>Email: {{ user_details['Email'] }}</p>
-            <!-- Additional user details can be added here -->
         </section>
 
-        <!-- Additional sections like Listed Items and Purchase History can be added here,
-        optionally populated by JavaScript if dynamic updates are needed -->
+        <section id="user-listings">
+            <h2>Listed Items</h2>
+            {% if user_listings %}
+                {% for listing in user_listings %}
+                    <div class="item">
+                        <img src="{{ listing['ImageURL'] }}" alt="{{ listing['ItemName'] }}">
+                        <div class="item-details">
+                            <h3>{{ listing['ItemName'] }}</h3>
+                            <p>{{ listing['Description'] }}</p>
+                            <p>Price: ${{ listing['Price'] }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You have no listed items.</p>
+            {% endif %}
+        </section>
+
+        <section id="purchase-history">
+            <h2>Purchase History</h2>
+            {% if purchase_history %}
+                {% for purchase in purchase_history %}
+                    <div class="item">
+                        <img src="{{ purchase['ImageURL'] }}" alt="{{ purchase['ItemName'] }}">
+                        <div class="item-details">
+                            <h3>{{ purchase['ItemName'] }}</h3>
+                            <p>{{ purchase['Description'] }}</p>
+                            <p>Price: ${{ purchase['Price'] }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You have no purchase history.</p>
+            {% endif %}
+        </section>
     </main>
 
     <footer>
@@ -115,6 +150,4 @@
         </div>
     </footer>
 </body>
-</html>
-
 </html>
