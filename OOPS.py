@@ -369,6 +369,7 @@ def cart():
             ''',
             (user_id,)
         ).fetchall()
+        total_price = calculate_total_price(cart_items)
     finally:
         conn.close()
 
