@@ -375,7 +375,7 @@ def cart():
     finally:
         conn.close()
 
-   return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+    return render_template('cart.html', cart_items=cart_items, total_price=total_price)
 
 @app.route('/cart/<int:item_id>', methods=['PUT'])
 def update_cart_quantity(item_id):
