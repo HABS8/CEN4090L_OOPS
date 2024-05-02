@@ -100,6 +100,7 @@
                            name="quantity" min="1" value="{{ item['Quantity'] }}" required>
                 </div>
                 {% endfor %}
+                <h3>Total Price: ${{ total_price }}</h3>
             {% else %}
                 <p>Your cart is empty.</p>
             {% endif %}
