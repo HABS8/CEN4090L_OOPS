@@ -115,8 +115,37 @@
         </div>
     </footer>
 
-    <script>
-    // Script to handle updating quantities and removing items
+     <script>
+    // Handle the "Enter" keypress to update quantity
+    document.querySelectorAll('input[name="quantity"]').forEach((input) => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();  // Prevent form submission
+                const itemId = input.closest('.item').getAttribute('data-item-id');
+                const newQuantity = input.value;
+
+                // Send a PUT request to update the quantity
+                fetch(`/cart/${itemId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ quantity: newQuantity })
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        location.reload();  // Reload to reflect the updated total price
+                    }
+                })
+                .catch((error) => console.error('Error updating quantity:', error));
+            }
+        });
+    });
+
+    document.querySelector('.checkout-button').addEventListener('click', () => {
+        window.location.href = '/checkout';  // Redirects to checkout
+    });
     </script>
 </body>
 </html>
