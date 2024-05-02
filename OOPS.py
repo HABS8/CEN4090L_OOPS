@@ -98,7 +98,9 @@ def fetch_cart_items(user_id):
 
 def calculate_total_price(cart_items):
     total_price = sum(item['Price'] * item['Quantity'] for item in cart_items)
-    return total_price
+    # Return total price formatted to 2 decimal places
+    return f"{total_price:.2f}"
+
 
 def process_payment(total_price):
     # Simulate payment processing
@@ -374,6 +376,36 @@ def cart():
         conn.close()
 
    return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+
+@app.route('/cart/<int:item_id>', methods=['PUT'])
+def update_cart_quantity(item_id):
+    if 'user_id' not in session:
+        return {"error": "Not authorized"}, 401
+
+    # Ensure the quantity is properly converted to an integer
+    try:
+        new_quantity = int(request.json.get('quantity', 1))
+    except ValueError:
+        return {"error": "Invalid quantity"}, 400  # Handle invalid input
+
+    if new_quantity < 1:
+        return {"error": "Quantity must be at least 1"}, 400  # Validate minimum quantity
+
+    user_id = session['user_id']
+    conn = get_db_connection()
+    try:
+        # Update the quantity for the specified item in the cart
+        conn.execute(
+            'UPDATE Cart SET Quantity = ? WHERE UserId = ? AND ItemId = ?',
+            (new_quantity, user_id, item_id)
+        )
+        conn.commit()
+    except sqlite3.Error as e:
+        return {"error": f"Database error: {e}"}, 500
+    finally:
+        conn.close()
+
+    return {"success": True}  # Return a success response
 
 @app.route('/favorites')
 def favorites():
