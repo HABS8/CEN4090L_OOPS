@@ -373,7 +373,7 @@ def cart():
     finally:
         conn.close()
 
-    return render_template('cart.html', cart_items=cart_items)
+   return render_template('cart.html', cart_items=cart_items, total_price=total_price)
 
 @app.route('/favorites')
 def favorites():
